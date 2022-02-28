@@ -1,0 +1,113 @@
+create table CLIENT_MASTER
+(ClientNo varchar2(6) primary key check(ClientNo like 'C%'), 
+name varchar2(20) not null, 
+city varchar2(15), 
+pincode number(8),
+state varchar2(15), 
+balancedue number(10,2) );
+
+create table PRODUCT_MASTER
+(productNo varchar2(6) primary key check(productNo like 'P%'),
+description varchar2(15) not null,
+profitpercent number(4,2) not null,
+unitmeasure varchar2(10) not null,
+qtyinhand number(8) not null,
+recordlvl number(8) not null,
+sellprice number(8) not null check(sellprice<>0),
+costprice number(8,2) not null check(costprice<>0) );
+
+create table SALESMAN_MASTER
+(salesmanNo varchar2(6) primary key check(salesmanNo like 'S%'),
+name varchar2(20) not null, 
+address1 varchar2(10) not null ,
+address2 varchar2(10),
+city varchar2(20), 
+pincode number(7),
+state varchar2(20),
+sal number(8,2) not null check(sal<>0),
+tgttoget number(6,2) not null check(tgttoget<>0),
+ytdsales number(6,2) not null,
+remarks varchar2(20) );
+
+create table sales_order
+( orderno varchar2(6) primary key check(orderno like 'O%'),
+orderdate date,
+clientno varchar2(6) references client_master(clientno),
+delyaddress varchar2(25),
+salesmanno varchar2(6) references salesman_master(salesmanno),
+delytype char(1) default('F') check(delytype in ('P','F')),
+billedyn char(1),
+delydate date,
+orderstatus varchar2(10) check(orderstatus in ('in process', 'fulfilled','backorder','cancelled')),
+check(delydate>=orderdate)
+);
+
+create table sales_order_details
+(orderno varchar2(6) references sales_order(orderno),
+productno varchar2(6) references product_master(productno),
+qtyordered number(8),
+qtydisp number(8),
+productrate number(10,2),
+primary key(orderno,productno)
+);
+
+
+insert into client_master values('C00001', 'Ivan Bayross', 'Mumbai', 400054, 'Maharashtra', 15000);
+
+INSERT ALL
+INTO CLIENT_MASTER VALUES ('C00002', 'Mamata Mazumdar', 'Madras', 780001, 'Tamil Nadu', 0)
+INTO CLIENT_MASTER VALUES ('C00004', 'Ashwini Joshi', 'Bangalore', 560001, 'Karnataka', 0)
+INTO CLIENT_MASTER VALUES ('C00003', 'Chhaya Bankar', 'Mumbai', 400057, 'Maharashtra', 5000)
+INTO CLIENT_MASTER VALUES ('C00005', 'Hansel Colaco', 'Mumbai', 400060, 'Maharashtra', 2000)
+INTO CLIENT_MASTER VALUES ('C00006', 'Deepak Sharma', 'Mangalore', 560050, 'Karanataka', 0)
+SELECT * FROM DUAL;
+
+INSERT ALL
+INTO PRODUCT_MASTER VALUES ('P00001','T-shirts',5,'Piece',200,50,350,250)
+INTO PRODUCT_MASTER VALUES ('P0345','Shirts',6,'Piece',150,50,500,350)
+INTO PRODUCT_MASTER VALUES ('P06734','Cotton Jeans
+',5,'Piece',100,20,600,450)
+INTO PRODUCT_MASTER VALUES ('P07865','Jeans',5,'Piece',100,20,750,500)
+INTO PRODUCT_MASTER VALUES ('P07868','Trousers',2,'Piece',150,50,850,550)
+INTO PRODUCT_MASTER VALUES ('P07885','PuMOvers',2.5,'Piece',80,30,700,450)
+INTO PRODUCT_MASTER VALUES ('P07965','Denim Shirts
+',4,'Piece',100,40,350,250)
+INTO PRODUCT_MASTER VALUES ('P07975','Lyers Tops',5,'Piece',70,30,300,175)
+INTO PRODUCT_MASTER VALUES ('P08865','Skirts
+',5,'Piece',75,30,450,300)
+INTO PRODUCT_MASTER VALUES ('P03453','Leggings',5,'Piece',200,50,350,250)
+SELECT * FROM DUAL;
+
+
+INSERT ALL
+INTO SALESMAN_MASTER VALUES('S00001','Aman','A/14','Worli','Mumbai',400002,'Maharashtra',3000,100,50,'Good')
+INTO SALESMAN_MASTER VALUES('S00002','Omkar','65','Nariman','Mumbai',400001,'Maharashtra',3000,200,100,'Good')
+INTO SALESMAN_MASTER VALUES('S00003','Raj','P-7','Bandra','Mumbai',400032,'Maharashtra',3000,200,100,'Good')
+INTO SALESMAN_MASTER VALUES('S00004','Ashish','A/5','Juhu','Mumbai',400044,'Maharashtra',3500,200,150,'Good')
+SELECT * FROM DUAL;
+
+
+
+Insert INTO SALES_ORDER VALUES('O19001','10-JUL-02', 'C00001', '69 U.Bc Road', 'S00001', 'F', 'N', '20-JUL-02', 'in process');
+
+Insert INTO SALES_ORDER VALUES('O19002','15-JUN-02', 'C00002', '108 U.Dc Road', 'S00002', 'P', 'N', '27-JUN-02', 'cancelled');
+Insert INTO SALES_ORDER VALUES('O46865','11-FEB-02', 'C00003', '420 U.Kc Road', 'S00003', 'F', 'Y', '20-FEB-02', 'fulfilled');
+Insert INTO SALES_ORDER VALUES('O19003','15-MAR-02', 'C00001', '6969 U.Rc Road', 'S00001', 'F', 'Y', '07-APR-02', 'fulfilled');
+Insert INTO SALES_ORDER VALUES('O46866','12-MAY-02', 'C00004', '69 Hatt Yu Road', 'S00002', 'P', 'N', '22-MAY-02', 'cancelled');
+Insert INTO SALES_ORDER VALUES('O19008','14-JUL-02', 'C00005', '420 I.Best Road', 'S00004', 'F', 'N', '26-JUL-02', 'in process');
+
+
+INSERT INTO SALES_ORDER_DETAILS VALUES('O19001', 'P00001', 4, 4, 525);
+INSERT INTO SALES_ORDER_DETAILS VALUES('O19001', 'P07965',2,1,8400);
+INSERT INTO SALES_ORDER_DETAILS VALUES('019001','P07885',2,1,5250);
+INSERT INTO SALES_ORDER_DETAILS VALUES('019002','P00001',10,0,525);
+INSERT INTO SALES_ORDER_DETAILS VALUES('O46865', 'P07868',3,3,3150);
+INSERT INTO SALES_ORDER_DETAILS VALUES('O46865','P07885', 3,1,5250);
+INSERT INTO SALES_ORDER_DETAILS VALUES('O46865','P00001',10,10,525);
+INSERT INTO SALES_ORDER_DETAILS VALUES('O46865', 'P0345', 4, 4, 1050);
+INSERT INTO SALES_ORDER_DETAILS VALUES('O19003', 'P03453', 2, 2, 1050);
+INSERT INTO SALES_ORDER_DETAILS VALUES('O19003', 'P06734', 1, 1, 12000);
+INSERT INTO SALES_ORDER_DETAILS VALUES('O46866', 'P07965', 1, 0, 8400);
+INSERT INTO SALES_ORDER_DETAILS VALUES('O46866', 'P07975', 1, 0, 1050);
+INSERT INTO SALES_ORDER_DETAILS VALUES('O19008', 'P00001', 10, 5, 525);
+INSERT INTO SALES_ORDER_DETAILS VALUES('O19008', 'P07975', 5, 3, 1050);

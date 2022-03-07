@@ -1,0 +1,30 @@
+1.
+SELECT 10+12-5*4/3 FROM DUAL;
+2.
+SELECT CURRENT_TIMESTAMP FROM DUAL;
+3.
+SELECT upper('subham') from dual;
+4.
+SELECT substr('Subham',2,5) from dual;
+5.
+SELECT CURRENT_DATE-1 as Yesterday, CURRENT_DATE as Today, CURRENT_DATE+1 as Tomorrow from dual;
+6.
+SELECT extract(month from sysdate), extract(year from sysdate) from dual;
+7.
+select sin(60) as sin_60, cos(60) as cos_60, tan(60) as tan_60, sinh(0) as sinh_0, cosh(0) as cosh_0 from dual;
+8.
+select ceil(4.62), floor(6.69),abs(-420),log(10,100) from dual;
+9.
+select sqrt(5) from dual;
+10.
+select lower('IVAN BAYROSS') as lowercase from dual;
+11.
+select upper('ivan bayross') as uppercase from dual;
+12.
+select to_char(sysdate,'DD/MM/YY') from dual;
+13.
+select round(abs(months_between(to_date('02-JUL-01'), to_date('04-JAN-01')))) "MONTHS" FROM DUAL;
+14.
+SELECT ADD_MONTHS(SYSDATE,4) as newmonth from dual;
+15.
+select round(15.19,1) from dual;

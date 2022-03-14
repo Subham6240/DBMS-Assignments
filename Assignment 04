@@ -1,0 +1,129 @@
+create table sailors(
+s_id number(8) primary key, 
+s_name varchar2(20),
+rating number(2),
+age number(3)
+);
+
+create table boats(
+b_id number(8) primary key, 
+b_name varchar2(20),
+color varchar2(20)
+);
+
+create table reserves(
+s_id number(8) references sailors(s_id),
+b_id number(8) references boats(b_id),
+day varchar2(15),
+primary key(s_id,b_id)
+);
+
+
+insert into sailors values(1,'Shounak',5,21);
+insert into sailors values(2,'Tarun',7,22);
+insert into sailors values(3,'Subham',9,21);
+insert into sailors values(4,'Aniket',8,48);
+insert into sailors values(5,'Sweta',2,64);
+insert into sailors values(6,'Ankita',6,21);
+insert into sailors values(7,'DC sir',9,50);
+insert into sailors values(8,'Arnab',1,21);
+insert into sailors values(9,'Triasa',8,10);
+
+insert into boats values(1,'Titanic','Red');
+insert into boats values(2,'Triasanic','Green');
+insert into boats values(3,'Aninic','Black');
+insert into boats values(4,'Avinic','Blue');
+insert into boats values(5,'Subnic','Red');
+insert into boats values(6,'Nicjonas','Green');
+insert into boats values(7,'Arnic','White');
+insert into boats values(8,'Nicnic','White');
+insert into boats values(9,'Picnic','Blue');
+
+insert into reserves values(1,1,'Monday');
+insert into reserves values(1,2,'Wednesday');
+insert into reserves values(2,1,'Saturday');
+insert into reserves values(3,8,'Monday');
+insert into reserves values(2,3,'Tuesday');
+insert into reserves values(5,3,'Tuesday');
+insert into reserves values(8,4,'Sunday');
+insert into reserves values(2,7,'Thursday');
+insert into reserves values(9,6,'Friday');
+insert into reserves values(4,7,'Friday');
+insert into reserves values(2,9,'Sunday');
+insert into reserves values(7,2,'Monday');
+
+Select b.color from boats b, reserves r, sailors s where b.b_id=r.b_id and r.s_id=s.s_id and s.s_name like 'Tarun';
+
+select s.s_id,s.s_name from sailors s, reserves r where s.s_id=r.s_id and r.day='Monday';
+
+select b.b_id,b.b_name from boats b where b.color in ('Red','Green');
+
+delete from reserves r where r.s_id=(select s.s_id from sailors s where s.age>60);
+delete from sailors where age>60;
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+CREATE TABLE TEACHER(
+TID NUMBER PRIMARY KEY,
+NAME VARCHAR2(30),
+DEPT VARCHAR2(10));
+
+CREATE TABLE SUBJECT(
+SUBNO NUMBER PRIMARY KEY,
+SUBTITLE VARCHAR2(20));
+
+CREATE TABLE TAUGHTBY(
+TID NUMBER REFERENCES TEACHER(TID),
+SUBNO NUMBER REFERENCES SUBJECT(SUBNO),
+PRIMARY KEY(TID,SUBNO));
+
+CREATE TABLE STUDENT(
+ROLLNO NUMBER PRIMARY KEY,
+SNAME VARCHAR2(30),
+CITY VARCHAR2(30));
+clear screen;
+
+insert into teacher values(1,'Amitabha Bachchan','CSE');
+insert into teacher values(2,'Abhishek Bachchan','Physics');
+insert into teacher values(3,'Madhurima Ranjit','Physics');
+insert into teacher values(4,'Shounak Rakshit','CSE');
+insert into teacher values(5,'Subham Tripathi','IT');
+insert into teacher values(6,'Aniket Ray','ECE');
+insert into teacher values(7,'Pom Kumari','Physics');
+insert into teacher values(8,'Arnab Das','CSE');
+
+
+insert into subject values(1,'Thermodynamics');
+insert into subject values(2,'Quantum physics');
+insert into subject values(3,'DBMS');
+insert into subject values(4,'Data mining');
+insert into subject values(5,'Momgodb');
+
+
+insert into taughtby values(7,2);
+insert into taughtby values(1,1);
+insert into taughtby values(6,1);
+insert into taughtby values(4,3);
+insert into taughtby values(7,4);
+insert into taughtby values(2,1);
+
+insert into student values(11,'Abhishek','Budge budge');
+insert into student values(21,'Debashish','Ranchi');
+insert into student values(31,'Tony Stark','Kolkata');
+insert into student values(24,'Arnab','Garia');
+insert into student values(27,'Prajeet','Ladakh');
+insert into student values(25,'Rohit','Kolkata');
+insert into student values(19,'Ankita','Garia');
+insert into student values(29,'Ramit','Behala');
+insert into student values(30,'Souvik','Kolkata');
+
+
+select teacher.name from teacher ,subject,taughtby where teacher.tid=taughtby.tid and taughtby.subno=subject.subno and subject.subtitle like 'Thermodynamics' and 
+
+teacher.dept like 'Physics';
+
+update subject set subtitle='RDBMS' where subtitle= 'DBMS';
+
+select sname from student where city='Kolkata' and rollno between 20 and 25;
+
+select * from student where city='Kolkata' order by rollno desc;
